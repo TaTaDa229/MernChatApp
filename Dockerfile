@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 5000
 
 # Khởi chạy ứng dụng
-CMD [ "node", "server/index.js" ]
+CMD ["node", "frontend/src/index.js"]
