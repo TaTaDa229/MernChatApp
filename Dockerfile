@@ -1,25 +1,23 @@
-# Dockerfile
+# Sử dụng image node.js làm base
+FROM node:14
 
-# Frontend - React.js
-FROM node:14.16.1 AS frontend
+# Thiết lập thư mục làm việc
 WORKDIR /app
-COPY frontend/package.json frontend/yarn.lock ./
-RUN yarn install
-COPY frontend ./
-RUN yarn build
 
-# Backend - Node.js
-FROM node:14.16.1 AS backend
-WORKDIR /app
-COPY backend/package.json backend/yarn.lock ./
-RUN yarn install
-COPY backend ./
+# Copy package.json và package-lock.json vào thư mục /app
+COPY package*.json ./
 
-# Combine frontend and backend
-FROM node:14.16.1
-WORKDIR /app
-COPY --from=frontend /app/build ./frontend
-COPY --from=backend /app ./
+# Cài đặt các dependencies
+RUN npm install
 
-EXPOSE 3000
-CMD ["node", "server/index.js"]  # Đường dẫn đã được thay đổi tại đây
+# Copy toàn bộ mã nguồn vào thư mục /app
+COPY . .
+
+# Build ứng dụng
+RUN npm run build
+
+# Expose cổng 5000 (hoặc cổng bạn sử dụng cho ứng dụng)
+EXPOSE 5000
+
+# Khởi chạy ứng dụng
+CMD [ "node", "server/index.js" ]
